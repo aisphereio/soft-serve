@@ -18,3 +18,11 @@ func TestProtocolEnvironmentUsesRequestContext(t *testing.T) {
 		t.Fatalf("protocolEnvironment() = %v, want [SUBJECT=alice]", got)
 	}
 }
+
+func TestProtocolDefaultBranchIsCopiedToRequestContext(t *testing.T) {
+	base := WithProtocolDefaultBranch(context.Background(), "main")
+	request := copyProtocolEnvironment(context.Background(), base)
+	if got := protocolDefaultBranch(request); got != "main" {
+		t.Fatalf("protocolDefaultBranch() = %q, want main", got)
+	}
+}

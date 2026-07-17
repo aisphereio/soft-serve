@@ -489,7 +489,17 @@ func serviceRpc(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if service == git.ReceivePackService {
-		if err := git.EnsureDefaultBranch(ctx, cmd.Dir); err != nil {
+		var err error
+		if branch := strings.TrimSpace(protocolDefaultBranch(ctx)); branch != "" {
+			var repo *gitb.Repository
+			repo, err = gitb.Open(cmd.Dir)
+			if err == nil {
+				_, err = repo.SymbolicRef(gitb.HEAD, gitb.RefsHeads+branch)
+			}
+		} else {
+			err = git.EnsureDefaultBranch(ctx, cmd.Dir)
+		}
+		if err != nil {
 			logger.Errorf("failed to ensure default branch: %s", err)
 		}
 	}
