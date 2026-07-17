@@ -449,10 +449,12 @@ func serviceRpc(w http.ResponseWriter, r *http.Request) {
 		"SOFT_SERVE_REPO_PATH=" + dir,
 		"SOFT_SERVE_LOG_PATH=" + filepath.Join(cfg.DataPath, "log", "hooks.log"),
 	}...)
+	cmd.Env = append(cmd.Env, protocolEnvironment(ctx)...)
 	if user != nil {
 		cmd.Env = append(cmd.Env, []string{
 			"SOFT_SERVE_USERNAME=" + user.Username(),
 		}...)
+		cmd.Env = append(cmd.Env, protocolEnvironment(ctx)...)
 	}
 	if len(version) != 0 {
 		cmd.Env = append(cmd.Env, []string{
