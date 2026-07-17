@@ -4,7 +4,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/charmbracelet/soft-serve/pkg/ssrf"
+	"github.com/aisphereio/soft-serve/pkg/ssrf"
 )
 
 // TestValidateWebhookURL verifies the wrapper delegates correctly and

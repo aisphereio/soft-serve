@@ -7,14 +7,14 @@ import (
 	"charm.land/bubbles/v2/list"
 	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
-	"github.com/charmbracelet/soft-serve/git"
-	"github.com/charmbracelet/soft-serve/pkg/proto"
-	"github.com/charmbracelet/soft-serve/pkg/ui/common"
-	"github.com/charmbracelet/soft-serve/pkg/ui/components/footer"
-	"github.com/charmbracelet/soft-serve/pkg/ui/components/header"
-	"github.com/charmbracelet/soft-serve/pkg/ui/components/selector"
-	"github.com/charmbracelet/soft-serve/pkg/ui/pages/repo"
-	"github.com/charmbracelet/soft-serve/pkg/ui/pages/selection"
+	"github.com/aisphereio/soft-serve/git"
+	"github.com/aisphereio/soft-serve/pkg/proto"
+	"github.com/aisphereio/soft-serve/pkg/ui/common"
+	"github.com/aisphereio/soft-serve/pkg/ui/components/footer"
+	"github.com/aisphereio/soft-serve/pkg/ui/components/header"
+	"github.com/aisphereio/soft-serve/pkg/ui/components/selector"
+	"github.com/aisphereio/soft-serve/pkg/ui/pages/repo"
+	"github.com/aisphereio/soft-serve/pkg/ui/pages/selection"
 )
 
 type page int

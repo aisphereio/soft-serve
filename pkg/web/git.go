@@ -15,14 +15,14 @@ import (
 	"time"
 
 	"charm.land/log/v2"
-	gitb "github.com/charmbracelet/soft-serve/git"
-	"github.com/charmbracelet/soft-serve/pkg/access"
-	"github.com/charmbracelet/soft-serve/pkg/backend"
-	"github.com/charmbracelet/soft-serve/pkg/config"
-	"github.com/charmbracelet/soft-serve/pkg/git"
-	"github.com/charmbracelet/soft-serve/pkg/lfs"
-	"github.com/charmbracelet/soft-serve/pkg/proto"
-	"github.com/charmbracelet/soft-serve/pkg/utils"
+	gitb "github.com/aisphereio/soft-serve/git"
+	"github.com/aisphereio/soft-serve/pkg/access"
+	"github.com/aisphereio/soft-serve/pkg/backend"
+	"github.com/aisphereio/soft-serve/pkg/config"
+	"github.com/aisphereio/soft-serve/pkg/git"
+	"github.com/aisphereio/soft-serve/pkg/lfs"
+	"github.com/aisphereio/soft-serve/pkg/proto"
+	"github.com/aisphereio/soft-serve/pkg/utils"
 	"github.com/gorilla/mux"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
@@ -105,15 +105,27 @@ func withParams(next http.Handler) http.Handler {
 
 // GitController is a router for git services.
 func GitController(_ context.Context, r *mux.Router) {
+	registerGitRoutes(r, func(next http.Handler) http.Handler {
+		return withAccess(next)
+	})
+}
+
+// GitProtocolController registers Git/LFS routes for an embedding application
+// that has already authenticated and authorized the request at its boundary.
+func GitProtocolController(_ context.Context, r *mux.Router) {
+	registerGitRoutes(r, withProtocolAccess)
+}
+
+func registerGitRoutes(r *mux.Router, accessMiddleware func(http.Handler) http.Handler) {
 	basePrefix := "/{repo:.*}"
 	for _, route := range gitRoutes {
 		// NOTE: withParam must always be the outermost wrapper, otherwise the
 		// request vars will not be set.
-		r.Handle(basePrefix+route.path, withParams(withAccess(route)))
+		r.Handle(basePrefix+route.path, withParams(accessMiddleware(route)))
 	}
 
 	// Handle go-get
-	r.Handle(basePrefix, withParams(withAccess(http.HandlerFunc(GoGetHandler)))).Methods(http.MethodGet)
+	r.Handle(basePrefix, withParams(accessMiddleware(http.HandlerFunc(GoGetHandler)))).Methods(http.MethodGet)
 }
 
 var gitRoutes = []GitRoute{
@@ -364,6 +376,35 @@ func withAccess(next http.Handler) http.HandlerFunc {
 
 		next.ServeHTTP(w, r)
 	}
+}
+
+// withProtocolAccess prepares Soft Serve's repository and legacy access-level
+// context after the embedding boundary has authorized DescribeRequest. It does
+// not authenticate, query collaborators, or create missing repositories.
+func withProtocolAccess(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		ctx := r.Context()
+		be := backend.FromContext(ctx)
+		described, err := DescribeRequest(r)
+		if err != nil {
+			renderNotFound(w, r)
+			return
+		}
+
+		repo, err := be.Repository(ctx, described.Repository)
+		if err != nil || repo == nil {
+			renderNotFound(w, r)
+			return
+		}
+
+		level := access.ReadOnlyAccess
+		if described.Action == ActionWrite {
+			level = access.ReadWriteAccess
+		}
+		ctx = proto.WithRepositoryContext(ctx, repo)
+		ctx = access.WithContext(ctx, level)
+		next.ServeHTTP(w, r.WithContext(ctx))
+	})
 }
 
 //nolint:revive

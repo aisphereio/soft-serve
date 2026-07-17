@@ -3,8 +3,8 @@ package cmd
 import (
 	"strings"
 
-	"github.com/charmbracelet/soft-serve/pkg/backend"
-	"github.com/charmbracelet/soft-serve/pkg/sshutils"
+	"github.com/aisphereio/soft-serve/pkg/backend"
+	"github.com/aisphereio/soft-serve/pkg/sshutils"
 	"github.com/spf13/cobra"
 )
 
