@@ -4,11 +4,11 @@ import (
 	"context"
 	"strings"
 
-	"github.com/charmbracelet/soft-serve/pkg/access"
-	"github.com/charmbracelet/soft-serve/pkg/db"
-	"github.com/charmbracelet/soft-serve/pkg/db/models"
-	"github.com/charmbracelet/soft-serve/pkg/store"
-	"github.com/charmbracelet/soft-serve/pkg/utils"
+	"github.com/aisphereio/soft-serve/pkg/access"
+	"github.com/aisphereio/soft-serve/pkg/db"
+	"github.com/aisphereio/soft-serve/pkg/db/models"
+	"github.com/aisphereio/soft-serve/pkg/store"
+	"github.com/aisphereio/soft-serve/pkg/utils"
 )
 
 type collabStore struct{}

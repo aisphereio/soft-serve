@@ -1,7 +1,7 @@
 package webhook
 
 import (
-	"github.com/charmbracelet/soft-serve/pkg/ssrf"
+	"github.com/aisphereio/soft-serve/pkg/ssrf"
 )
 
 // Error aliases for backward compatibility.

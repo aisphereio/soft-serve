@@ -1,4 +1,4 @@
-module github.com/charmbracelet/soft-serve
+module github.com/aisphereio/soft-serve
 
 go 1.25.9
 

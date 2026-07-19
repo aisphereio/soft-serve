@@ -4,11 +4,11 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/charmbracelet/soft-serve/git"
-	"github.com/charmbracelet/soft-serve/pkg/config"
-	"github.com/charmbracelet/soft-serve/pkg/db"
-	"github.com/charmbracelet/soft-serve/pkg/proto"
-	"github.com/charmbracelet/soft-serve/pkg/store"
+	"github.com/aisphereio/soft-serve/git"
+	"github.com/aisphereio/soft-serve/pkg/config"
+	"github.com/aisphereio/soft-serve/pkg/db"
+	"github.com/aisphereio/soft-serve/pkg/proto"
+	"github.com/aisphereio/soft-serve/pkg/store"
 )
 
 // BranchTagEvent is a branch or tag event.

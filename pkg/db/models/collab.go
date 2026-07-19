@@ -3,7 +3,7 @@ package models
 import (
 	"time"
 
-	"github.com/charmbracelet/soft-serve/pkg/access"
+	"github.com/aisphereio/soft-serve/pkg/access"
 )
 
 // Collab represents a repository collaborator.

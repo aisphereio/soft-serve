@@ -7,12 +7,12 @@ import (
 	"io/fs"
 	"os"
 
-	"github.com/charmbracelet/soft-serve/pkg/backend"
-	"github.com/charmbracelet/soft-serve/pkg/config"
-	"github.com/charmbracelet/soft-serve/pkg/db"
-	"github.com/charmbracelet/soft-serve/pkg/hooks"
-	"github.com/charmbracelet/soft-serve/pkg/store"
-	"github.com/charmbracelet/soft-serve/pkg/store/database"
+	"github.com/aisphereio/soft-serve/pkg/backend"
+	"github.com/aisphereio/soft-serve/pkg/config"
+	"github.com/aisphereio/soft-serve/pkg/db"
+	"github.com/aisphereio/soft-serve/pkg/hooks"
+	"github.com/aisphereio/soft-serve/pkg/store"
+	"github.com/aisphereio/soft-serve/pkg/store/database"
 	"github.com/spf13/cobra"
 )
 

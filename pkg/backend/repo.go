@@ -13,16 +13,16 @@ import (
 	"strings"
 	"time"
 
-	"github.com/charmbracelet/soft-serve/git"
-	"github.com/charmbracelet/soft-serve/pkg/db"
-	"github.com/charmbracelet/soft-serve/pkg/db/models"
-	"github.com/charmbracelet/soft-serve/pkg/hooks"
-	"github.com/charmbracelet/soft-serve/pkg/lfs"
-	"github.com/charmbracelet/soft-serve/pkg/proto"
-	"github.com/charmbracelet/soft-serve/pkg/storage"
-	"github.com/charmbracelet/soft-serve/pkg/task"
-	"github.com/charmbracelet/soft-serve/pkg/utils"
-	"github.com/charmbracelet/soft-serve/pkg/webhook"
+	"github.com/aisphereio/soft-serve/git"
+	"github.com/aisphereio/soft-serve/pkg/db"
+	"github.com/aisphereio/soft-serve/pkg/db/models"
+	"github.com/aisphereio/soft-serve/pkg/hooks"
+	"github.com/aisphereio/soft-serve/pkg/lfs"
+	"github.com/aisphereio/soft-serve/pkg/proto"
+	"github.com/aisphereio/soft-serve/pkg/storage"
+	"github.com/aisphereio/soft-serve/pkg/task"
+	"github.com/aisphereio/soft-serve/pkg/utils"
+	"github.com/aisphereio/soft-serve/pkg/webhook"
 )
 
 func validateImportRemote(remote string) error {

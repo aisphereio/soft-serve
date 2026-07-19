@@ -8,12 +8,12 @@ import (
 	"charm.land/bubbles/v2/list"
 	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
-	"github.com/charmbracelet/soft-serve/pkg/access"
-	"github.com/charmbracelet/soft-serve/pkg/backend"
-	"github.com/charmbracelet/soft-serve/pkg/ui/common"
-	"github.com/charmbracelet/soft-serve/pkg/ui/components/code"
-	"github.com/charmbracelet/soft-serve/pkg/ui/components/selector"
-	"github.com/charmbracelet/soft-serve/pkg/ui/components/tabs"
+	"github.com/aisphereio/soft-serve/pkg/access"
+	"github.com/aisphereio/soft-serve/pkg/backend"
+	"github.com/aisphereio/soft-serve/pkg/ui/common"
+	"github.com/aisphereio/soft-serve/pkg/ui/components/code"
+	"github.com/aisphereio/soft-serve/pkg/ui/components/selector"
+	"github.com/aisphereio/soft-serve/pkg/ui/components/tabs"
 )
 
 const (

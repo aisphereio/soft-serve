@@ -3,10 +3,10 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/charmbracelet/soft-serve/git"
-	"github.com/charmbracelet/soft-serve/pkg/backend"
-	"github.com/charmbracelet/soft-serve/pkg/proto"
-	"github.com/charmbracelet/soft-serve/pkg/ui/common"
+	"github.com/aisphereio/soft-serve/git"
+	"github.com/aisphereio/soft-serve/pkg/backend"
+	"github.com/aisphereio/soft-serve/pkg/proto"
+	"github.com/aisphereio/soft-serve/pkg/ui/common"
 	"github.com/dustin/go-humanize"
 	"github.com/spf13/cobra"
 )

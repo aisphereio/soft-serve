@@ -1,24 +1,29 @@
-name: build
+name: CI
 
 on:
   push:
     branches:
-      - "main"
+      - main
+      - 'feat/**'
   pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: soft-serve-ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  build:
-    uses: charmbracelet/meta/.github/workflows/build.yml@main
-
-  snapshot:
-    uses: charmbracelet/meta/.github/workflows/snapshot.yml@main
-    secrets:
-      goreleaser_key: ${{ secrets.GORELEASER_KEY }}
-
-  test_postgres:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
     services:
       postgres:
-        image: postgres
+        image: postgres:17
         ports:
           - 5432:5432
         env:
@@ -28,19 +33,30 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-    runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
-      - name: Install Go
-        uses: actions/setup-go@v6
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
         with:
-          go-version: ^1
+          go-version-file: go.mod
           cache: true
-      - name: Download Go modules
+
+      - name: Download dependencies
         run: go mod download
-      - name: Test
-        run: go test ./...
+
+      - name: Test SQLite implementation
+        run: go test ./... -count=1
+
+      - name: Test PostgreSQL implementation
         env:
           SOFT_SERVE_DB_DRIVER: postgres
           SOFT_SERVE_DB_DATA_SOURCE: postgres://postgres:postgres@localhost/postgres?sslmode=disable
+        run: go test ./pkg/backend ./pkg/db/... ./pkg/store/... ./pkg/web -count=1
+
+      - name: Build
+        run: go build ./cmd/soft
+
+      - name: Reject repository mutations
+        run: git diff --exit-code

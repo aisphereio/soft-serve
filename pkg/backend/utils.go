@@ -1,8 +1,8 @@
 package backend
 
 import (
-	"github.com/charmbracelet/soft-serve/git"
-	"github.com/charmbracelet/soft-serve/pkg/proto"
+	"github.com/aisphereio/soft-serve/git"
+	"github.com/aisphereio/soft-serve/pkg/proto"
 )
 
 // LatestFile returns the contents of the latest file at the specified path in

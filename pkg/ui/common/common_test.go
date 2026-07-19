@@ -3,7 +3,7 @@ package common_test
 import (
 	"testing"
 
-	"github.com/charmbracelet/soft-serve/pkg/ui/common"
+	"github.com/aisphereio/soft-serve/pkg/ui/common"
 )
 
 func TestIsFileMarkdown(t *testing.T) {

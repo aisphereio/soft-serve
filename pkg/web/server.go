@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"charm.land/log/v2"
-	"github.com/charmbracelet/soft-serve/pkg/config"
+	"github.com/aisphereio/soft-serve/pkg/config"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 )
@@ -37,5 +37,21 @@ func NewRouter(ctx context.Context) http.Handler {
 		handlers.AllowedMethods(cfg.HTTP.CORS.AllowedMethods),
 	)(h)
 
+	return h
+}
+
+// NewProtocolRouter returns an embeddable Git Smart HTTP/LFS router. The
+// embedding application must authenticate and authorize the structured result
+// of DescribeRequest before invoking this handler. This router deliberately
+// skips Soft Serve's user/token/collaborator authorization and never creates a
+// repository from receive-pack traffic.
+func NewProtocolRouter(ctx context.Context) http.Handler {
+	logger := log.FromContext(ctx).WithPrefix("http.protocol")
+	router := mux.NewRouter()
+	GitProtocolController(ctx, router)
+	router.PathPrefix("/").HandlerFunc(renderNotFound)
+
+	h := NewLoggingMiddleware(router, logger)
+	h = NewContextHandler(ctx)(h)
 	return h
 }

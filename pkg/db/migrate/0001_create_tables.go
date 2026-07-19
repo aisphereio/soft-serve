@@ -6,10 +6,10 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/charmbracelet/soft-serve/pkg/access"
-	"github.com/charmbracelet/soft-serve/pkg/config"
-	"github.com/charmbracelet/soft-serve/pkg/db"
-	"github.com/charmbracelet/soft-serve/pkg/sshutils"
+	"github.com/aisphereio/soft-serve/pkg/access"
+	"github.com/aisphereio/soft-serve/pkg/config"
+	"github.com/aisphereio/soft-serve/pkg/db"
+	"github.com/aisphereio/soft-serve/pkg/sshutils"
 )
 
 const (
