@@ -28,8 +28,25 @@ func (*repoStore) CreateRepo(ctx context.Context, tx db.Handler, name string, us
 	}
 
 	query = tx.Rebind(query)
-	_, err := tx.ExecContext(ctx, query, values...)
-	return db.WrapError(err)
+	if _, err := tx.ExecContext(ctx, query, values...); err != nil {
+		return db.WrapError(err)
+	}
+
+	extensions := store.RepositoryCreateExtensionsFromContext(ctx)
+	if len(extensions) == 0 {
+		return nil
+	}
+
+	repo, err := (&repoStore{}).GetRepoByName(ctx, tx, name)
+	if err != nil {
+		return err
+	}
+	for _, extension := range extensions {
+		if err := extension(ctx, tx, repo); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 // DeleteRepoByName implements store.RepositoryStore.

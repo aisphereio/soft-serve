@@ -21,6 +21,7 @@ import (
 	"github.com/muesli/roff"
 	"github.com/spf13/cobra"
 	"go.uber.org/automaxprocs/maxprocs"
+	_ "modernc.org/sqlite"
 )
 
 var (
