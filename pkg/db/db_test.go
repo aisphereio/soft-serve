@@ -5,6 +5,8 @@ import (
 	"database/sql"
 	"strings"
 	"testing"
+
+	_ "modernc.org/sqlite"
 )
 
 func TestOpenUnknownDriver(t *testing.T) {
