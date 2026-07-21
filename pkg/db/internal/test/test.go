@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/aisphereio/soft-serve/pkg/db"
+	_ "modernc.org/sqlite"
 )
 
 // OpenSqlite opens a new temp SQLite database for testing.
