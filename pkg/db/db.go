@@ -9,8 +9,7 @@ import (
 	"charm.land/log/v2"
 	"github.com/aisphereio/soft-serve/pkg/config"
 	"github.com/jmoiron/sqlx"
-	_ "github.com/lib/pq"  // postgres driver
-	_ "modernc.org/sqlite" // sqlite driver
+	_ "github.com/lib/pq" // postgres driver
 )
 
 // DB is the interface for a Soft Serve database.
@@ -20,7 +19,9 @@ type DB struct {
 	ownsDB bool
 }
 
-// Open opens and owns a database connection pool.
+// Open opens and owns a database connection pool. Database drivers are
+// registered by the executable or embedding application, not by this reusable
+// package, so embedded hosts can select a single SQLite implementation.
 func Open(ctx context.Context, driverName string, dsn string) (*DB, error) {
 	database, err := sqlx.ConnectContext(ctx, driverName, dsn)
 	if err != nil {
