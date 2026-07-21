@@ -17,29 +17,49 @@ import (
 type DB struct {
 	*sqlx.DB
 	logger *log.Logger
+	ownsDB bool
 }
 
-// Open opens a database connection.
+// Open opens and owns a database connection pool.
 func Open(ctx context.Context, driverName string, dsn string) (*DB, error) {
-	db, err := sqlx.ConnectContext(ctx, driverName, dsn)
+	database, err := sqlx.ConnectContext(ctx, driverName, dsn)
 	if err != nil {
 		return nil, err
 	}
 
+	return newDB(ctx, database, true), nil
+}
+
+// NewWithSQLDB wraps an existing database/sql pool for use by Soft Serve.
+// When ownsDB is false, Close leaves the supplied pool open so the embedding
+// application remains responsible for its lifecycle.
+func NewWithSQLDB(ctx context.Context, sqlDB *sql.DB, driverName string, ownsDB bool) (*DB, error) {
+	if sqlDB == nil {
+		return nil, errors.New("soft-serve/db: SQL database is required")
+	}
+	if driverName == "" {
+		return nil, errors.New("soft-serve/db: driver name is required")
+	}
+
+	return newDB(ctx, sqlx.NewDb(sqlDB, driverName), ownsDB), nil
+}
+
+func newDB(ctx context.Context, database *sqlx.DB, ownsDB bool) *DB {
 	d := &DB{
-		DB: db,
+		DB:     database,
+		ownsDB: ownsDB,
 	}
-
 	if config.IsVerbose() {
-		logger := log.FromContext(ctx).WithPrefix("db")
-		d.logger = logger
+		d.logger = log.FromContext(ctx).WithPrefix("db")
 	}
-
-	return d, nil
+	return d
 }
 
 // Close implements db.DB.
 func (d *DB) Close() error {
+	if d == nil || d.DB == nil || !d.ownsDB {
+		return nil
+	}
 	return d.DB.Close()
 }
 
@@ -84,6 +104,5 @@ func rollback(tx *Tx, err error) error {
 		}
 		return fmt.Errorf("failed to rollback: %s: %w", err.Error(), rerr)
 	}
-
 	return err
 }
