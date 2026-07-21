@@ -16,6 +16,7 @@ import (
 	"github.com/aisphereio/soft-serve/pkg/proto"
 	"github.com/aisphereio/soft-serve/pkg/store"
 	"github.com/aisphereio/soft-serve/pkg/store/database"
+	_ "modernc.org/sqlite"
 )
 
 func TestDescribeRequestClassifiesGitAndLFS(t *testing.T) {
