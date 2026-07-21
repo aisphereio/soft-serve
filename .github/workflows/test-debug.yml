@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - feat/external-db-authz-integration
+  pull_request:
+    branches:
+      - main
 
 permissions:
   contents: read
