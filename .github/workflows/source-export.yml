@@ -1,0 +1,21 @@
+name: Source export
+
+on:
+  pull_request:
+  push:
+    branches:
+      - 'feat/**'
+
+permissions:
+  contents: read
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/upload-artifact@v4
+        with:
+          name: soft-source-tree
+          path: .
+          include-hidden-files: true
