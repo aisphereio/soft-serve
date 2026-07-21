@@ -17,10 +17,12 @@ import (
 	logr "github.com/aisphereio/soft-serve/pkg/log"
 	"github.com/aisphereio/soft-serve/pkg/ui/common"
 	"github.com/aisphereio/soft-serve/pkg/version"
+	"github.com/muesli/mango-cobra"
 	mcobra "github.com/muesli/mango-cobra"
 	"github.com/muesli/roff"
 	"github.com/spf13/cobra"
 	"go.uber.org/automaxprocs/maxprocs"
+	_ "modernc.org/sqlite"
 )
 
 var (
@@ -29,11 +31,13 @@ var (
 	Version = ""
 
 	// CommitSHA contains the SHA of the commit that this application was built
-	// against. It's set via ldflags when building.
+	// against. It's set via ldflags
+	// when building.
 	CommitSHA = ""
 
-	// CommitDate contains the date of the commit that this application was
-	// built against. It's set via ldflags when building.
+	// CommitDate contains the date of the commit that this application was built
+	// against. It's set via ldflags
+	// when building.
 	CommitDate = ""
 
 	rootCmd = &cobra.Command{
@@ -78,64 +82,4 @@ func init() {
 		browse.Command,
 	)
 	rootCmd.CompletionOptions.HiddenDefaultCmd = true
-
-	if len(CommitSHA) >= 7 {
-		vt := rootCmd.VersionTemplate()
-		rootCmd.SetVersionTemplate(vt[:len(vt)-1] + " (" + CommitSHA[0:7] + ")\n")
-	}
-	if Version == "" {
-		if info, ok := debug.ReadBuildInfo(); ok && info.Main.Sum != "" {
-			Version = info.Main.Version
-		} else {
-			Version = "unknown (built from source)"
-		}
-	}
-	rootCmd.Version = Version
-
-	version.Version = Version
-	version.CommitSHA = CommitSHA
-	version.CommitDate = CommitDate
-}
-
-func main() {
-	ctx := context.Background()
-	cfg := config.DefaultConfig()
-	if cfg.Exist() {
-		if err := cfg.Parse(); err != nil {
-			log.Fatal(err)
-		}
-	}
-
-	if err := cfg.ParseEnv(); err != nil {
-		log.Fatal(err)
-	}
-
-	ctx = config.WithContext(ctx, cfg)
-	logger, f, err := logr.NewLogger(cfg)
-	if err != nil {
-		log.Errorf("failed to create logger: %v", err)
-	}
-
-	ctx = log.WithContext(ctx, logger)
-	if f != nil {
-		defer f.Close() //nolint: errcheck
-	}
-
-	// Set global logger
-	log.SetDefault(logger)
-
-	var opts []maxprocs.Option
-	if config.IsVerbose() {
-		opts = append(opts, maxprocs.Logger(log.Debugf))
-	}
-
-	// Set the max number of processes to the number of CPUs
-	// This is useful when running soft serve in a container
-	if _, err := maxprocs.Set(opts...); err != nil {
-		log.Warn("couldn't set automaxprocs", "error", err)
-	}
-
-	if err := rootCmd.ExecuteContext(ctx); err != nil {
-		os.Exit(1)
-	}
 }
